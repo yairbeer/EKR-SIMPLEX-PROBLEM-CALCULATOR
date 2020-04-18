@@ -3,8 +3,7 @@ from fractions import Fraction
 
 import numpy as np
 
-from simplex import x, col_values, stdz_rows, solutions, maximization, stdz_rows2, \
-    removable_vars, z2_equation, minimization
+from simplex import standarize_rows, optimize
 
 
 def menu():
@@ -127,13 +126,16 @@ def menu():
 def main():
     prob_type = menu()
 
-    global decimals
-    global const_num, prod_nums
-    global const_names
 
     # TODO is it reversed?
+    col_values = []
     product_names = []
     z_equation = []
+    solutions = []
+    x = 'X'
+    final_rows = []
+    z2_equation = []
+    removable_vars = []
 
     const_num = int(input("how many products do you have: >"))
     prod_nums = int(input("how many constrains do you have: >"))
@@ -175,7 +177,7 @@ def main():
         equate_prod = float(Fraction(input('equate %s to: >' % prod)))
         col_values.append(equate_prod)
 
-    final_cols = stdz_rows(col_values) if is_max else stdz_rows2(col_values)
+    final_cols = standarize_rows(col_values, is_max, const_num, prod_nums)
     i = len(const_names) + 1
 
     if is_max:

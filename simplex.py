@@ -2,13 +2,6 @@ import pandas as pd
 import numpy as np
 
 
-product_names = []
-col_values = []
-final_rows = []
-solutions = []
-x = 'X'
-z2_equation = []
-removable_vars = []
 NO_SOLUTION_STR = """
         ---unboundedness ----
 Your problem might not be having solution due to wrong 
@@ -19,23 +12,22 @@ please check again the formulation of constrains
             """
 
 
-def maximization(final_cols, final_rows):
+def optimize(final_cols, final_rows, is_max, const_names, solutions):
     row_app = []
     last_col = final_cols[-1]
     min_last_row = min(last_col)
     min_manager = 1
-    print(" 1 TABLEAU")
-    try:
-        final_pd = pd.DataFrame(np.array(final_cols), columns=const_names, index=solutions)
-        print(final_pd)
-    except:
-        print('  ', const_names)
-        i = 0
-        for cols in final_cols:
-            print(solutions[i], cols)
-            i += 1
+
+    print("1 TABLEAU")
+    final_pd = pd.DataFrame(np.array(final_cols), columns=const_names, index=solutions)
+
     count = 2
     pivot_element = 2
+
+    pass
+
+
+def maximization(final_cols, final_rows):
     while min_last_row < 0 < pivot_element != 1 and min_manager == 1 and count < 6:
         print("*********************************************************")
         last_col = final_cols[-1]
@@ -137,22 +129,6 @@ def maximization(final_cols, final_rows):
 
 
 def minimization(final_cols, final_rows):
-    row_app = []
-    last_col = final_cols[-1]
-    min_last_row = min(last_col)
-    min_manager = 1
-    print("1 TABLEAU")
-    try:
-        fibal_pd = pd.DataFrame(np.array(final_cols), columns=const_names, index=solutions)
-        print(fibal_pd)
-    except:
-        print('  ', const_names)
-        i = 0
-        for cols in final_cols:
-            print(solutions[i], cols)
-            i += 1
-    count = 2
-    pivot_element = 2
     while min_last_row < 0 < pivot_element and min_manager == 1:
         print("*********************************************************")
         last_col = final_cols[-1]
