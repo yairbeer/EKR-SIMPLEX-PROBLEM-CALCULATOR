@@ -261,41 +261,36 @@ def minimization(final_cols, final_rows):
         """)
 
 
-def stdz_rows2(column_values):
+def standarize_rows(column_values, is_max, const_num, prod_nums):
     final_cols = [column_values[x:x + const_num + 1] for x in range(0, len(column_values), const_num + 1)]
-    sum_z = (0 - np.array(final_cols).sum(axis=0)).tolist()
-    for _list in sum_z:
-        z2_equation.append(_list)
+
+    if not is_max:
+        sum_z = (0 - np.array(final_cols).sum(axis=0)).tolist()
+        for _list in sum_z:
+            z2_equation.append(_list)
 
     for cols in final_cols:
-        while len(cols) < (const_num + (2 * prod_nums) - 1):
-            cols.insert(-1, 0)
+        if is_max:
+            while len(cols) < (const_num + prod_nums):
+                cols.insert(-1, 0)
+        else:
+            while len(cols) < (const_num + (2 * prod_nums) - 1):
+                cols.insert(-1, 0)
 
     i = const_num
-    for sub_col in final_cols:
-        sub_col.insert(i, -1)
-        z2_equation.insert(-1, 1)
-        i += 1
+
+    if not is_max:
+        for sub_col in final_cols:
+            sub_col.insert(i, -1)
+            z2_equation.insert(-1, 1)
+            i += 1
 
     for sub_col in final_cols:
         sub_col.insert(i, 1)
         i += 1
 
-    while len(z2_equation) < len(final_cols[0]):
-        z2_equation.insert(-1, 0)
-
-    return final_cols
-
-
-def stdz_rows(column_values):
-    final_cols = [column_values[x:x + const_num + 1] for x in range(0, len(column_values), const_num + 1)]
-    for cols in final_cols:
-        while len(cols) < (const_num + prod_nums):
-            cols.insert(-1, 0)
-
-    i = const_num
-    for sub_col in final_cols:
-        sub_col.insert(i, 1)
-        i += 1
+    if not is_max:
+        while len(z2_equation) < len(final_cols[0]):
+            z2_equation.insert(-1, 0)
 
     return final_cols

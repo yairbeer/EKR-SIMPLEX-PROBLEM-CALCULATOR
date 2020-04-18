@@ -163,6 +163,7 @@ def main():
         z_equation.append(0)
     print("__________________________________________________")
 
+    # TODO should be an API instead
     for prod in product_names:
         for const in const_names:
             try:
