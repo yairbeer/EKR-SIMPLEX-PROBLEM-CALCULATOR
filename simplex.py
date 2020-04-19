@@ -12,7 +12,8 @@ please check again the formulation of constrains
             """
 
 
-def optimize(final_cols, final_rows, is_max, const_names, solutions):
+def optimize(final_cols, final_rows, is_max, const_names, solutions, decimals):
+    removable_vars = []
     row_app = []
     last_col = final_cols[-1]
     min_last_row = min(last_col)
@@ -24,21 +25,18 @@ def optimize(final_cols, final_rows, is_max, const_names, solutions):
     count = 2
     pivot_element = 2
 
-    pass
-
-
-def maximization(final_cols, final_rows):
-    while min_last_row < 0 < pivot_element != 1 and min_manager == 1 and count < 6:
+    while min_last_row < 0 < pivot_element != 1 and min_manager == 1 and (not is_max or count < 6):
         print("*********************************************************")
         last_col = final_cols[-1]
         last_row = final_rows[-1]
-        min_last_row = min(last_col)
+        min_last_row = min(last_col) if is_max else min(last_col[:-1])
         index_of_min = last_col.index(min_last_row)
         pivot_row = final_rows[index_of_min]
         index_pivot_row = final_rows.index(pivot_row)
         row_div_val = []
+
         i = 0
-        for _ in last_row[:-1]:
+        for _ in last_row[:-1] if is_max else last_row[:-2]:
             try:
                 val = float(last_row[i] / pivot_row[i])
                 if val <= 0:
@@ -50,12 +48,15 @@ def maximization(final_cols, final_rows):
                 val = 10000000000
                 row_div_val.append(val)
             i += 1
+
         min_div_val = min(row_div_val)
         index_min_div_val = row_div_val.index(min_div_val)
         pivot_element = pivot_row[index_min_div_val]
         pivot_col = final_cols[index_min_div_val]
         index_pivot_col = final_cols.index(pivot_col)
         row_app[:] = []
+
+        # TODO final_val could be final_form for minimization
         for col in final_cols:
             if col is not pivot_col and col is not final_cols[-1]:
                 form = col[index_of_min] / pivot_element
@@ -71,6 +72,7 @@ def maximization(final_cols, final_rows):
                 final_val = np.array(pivot_col) * form
                 new_col = (np.round((np.array(col) + final_val), decimals)).tolist()
                 final_cols[final_cols.index(col)] = new_col
+
         final_rows[:] = []
         re_final_rows = np.array(final_cols).T.tolist()
         final_rows = final_rows + re_final_rows
@@ -83,7 +85,24 @@ def maximization(final_cols, final_rows):
         print('pivot column: ', pivot_row)
         print('pivot row: ', pivot_col)
         print("\n")
+        if not is_max:
+            removable = solutions[index_pivot_col]
+            if removable in removable_vars:
+                idex_remove = const_names.index(removable)
+                for colms in final_cols:
+                    colms.remove(colms[idex_remove])
+                const_names.remove(removable)
+
         solutions[index_pivot_col] = const_names[index_pivot_row]
+
+
+
+
+    pass
+
+
+def maximization(final_cols, final_rows):
+    while min_last_row < 0 < pivot_element != 1 and min_manager == 1 and count < 6:
 
         print(" %d TABLEAU" % count)
         try:
@@ -130,65 +149,7 @@ def maximization(final_cols, final_rows):
 
 def minimization(final_cols, final_rows):
     while min_last_row < 0 < pivot_element and min_manager == 1:
-        print("*********************************************************")
-        last_col = final_cols[-1]
-        last_row = final_rows[-1]
-        min_last_row = min(last_col[:-1])
-        index_of_min = last_col.index(min_last_row)
-        pivot_row = final_rows[index_of_min]
-        index_pivot_row = final_rows.index(pivot_row)
-        row_div_val = []
-        i = 0
-        for _ in last_row[:-2]:
-            try:
-                val = float(last_row[i] / pivot_row[i])
-                if val <= 0:
-                    val = 10000000000
-                else:
-                    val = val
-                row_div_val.append(val)
-            except ZeroDivisionError:
-                val = 10000000000
-                row_div_val.append(val)
-            i += 1
-        min_div_val = min(row_div_val)
-        index_min_div_val = row_div_val.index(min_div_val)
-        pivot_element = pivot_row[index_min_div_val]
-        pivot_col = final_cols[index_min_div_val]
-        index_pivot_col = final_cols.index(pivot_col)
-        row_app[:] = []
-        for col in final_cols:
-            if col is not pivot_col and col is not final_cols[-1]:
-                form = col[index_of_min] / pivot_element
-                final_form = np.array(pivot_col) * form
-                new_col = (np.round((np.array(col) - final_form), decimals)).tolist()
-                final_cols[final_cols.index(col)] = new_col
-            elif col is pivot_col:
-                new_col = (np.round((np.array(col) / pivot_element), decimals)).tolist()
-                final_cols[final_cols.index(col)] = new_col
-            else:
-                form = abs(col[index_of_min]) / pivot_element
-                final_form = np.array(pivot_col) * form
-                new_col = (np.round((np.array(col) + final_form), decimals)).tolist()
-                final_cols[final_cols.index(col)] = new_col
-        final_rows[:] = []
-        re_final_rows = np.array(final_cols).T.tolist()
-        final_rows = final_rows + re_final_rows
-        if min(row_div_val) != 10000000000:
-            min_manager = 1
-        else:
-            min_manager = 0
-        print('pivot element: %s' % pivot_element)
-        print('pivot column: ', pivot_row)
-        print('pivot row: ', pivot_col)
-        print("\n")
-        removable = solutions[index_pivot_col]
-        solutions[index_pivot_col] = const_names[index_pivot_row]
-        if removable in removable_vars:
-            idex_remove = const_names.index(removable)
-            for colms in final_cols:
-                colms.remove(colms[idex_remove])
-            const_names.remove(removable)
+
         print("%d TABLEAU" % count)
         try:
             fibal_pd = pd.DataFrame(np.array(final_cols), columns=const_names, index=solutions)

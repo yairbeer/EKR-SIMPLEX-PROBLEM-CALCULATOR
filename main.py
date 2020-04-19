@@ -135,7 +135,6 @@ def main():
     x = 'X'
     final_rows = []
     z2_equation = []
-    removable_vars = []
 
     const_num = int(input("how many products do you have: >"))
     prod_nums = int(input("how many constrains do you have: >"))
