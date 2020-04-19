@@ -199,6 +199,7 @@ def minimization(final_cols, final_rows):
 
 
 def standarize_rows(column_values, is_max, const_num, prod_nums):
+    z2_equation = []
     final_cols = [column_values[x:x + const_num + 1] for x in range(0, len(column_values), const_num + 1)]
 
     if not is_max:
@@ -230,4 +231,4 @@ def standarize_rows(column_values, is_max, const_num, prod_nums):
         while len(z2_equation) < len(final_cols[0]):
             z2_equation.insert(-1, 0)
 
-    return final_cols
+    return z2_equation, final_cols

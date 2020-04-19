@@ -126,15 +126,14 @@ def menu():
 def main():
     prob_type = menu()
 
-
-    # TODO is it reversed?
-    col_values = []
     product_names = []
     z_equation = []
-    solutions = []
+    col_values = []
+
+    # TODO is it reversed?
+    # solutions = []
     x = 'X'
-    final_rows = []
-    z2_equation = []
+    # final_rows = []
 
     const_num = int(input("how many products do you have: >"))
     prod_nums = int(input("how many constrains do you have: >"))
@@ -176,7 +175,7 @@ def main():
         equate_prod = float(Fraction(input('equate %s to: >' % prod)))
         col_values.append(equate_prod)
 
-    final_cols = standarize_rows(col_values, is_max, const_num, prod_nums)
+    z2_equation, final_cols = standarize_rows(col_values, is_max, const_num, prod_nums)
     i = len(const_names) + 1
 
     if is_max:
